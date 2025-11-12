@@ -96,14 +96,6 @@ jobs:
                 echo EOF
               } >> "$GITHUB_OUTPUT"
             docker logs --tail 10 local-ai
-    - name: Debug summary before Discord
-      shell: bash
-      run: |
-        echo '---- SUMMARY START ----'
-        printf '%s\n' "${{ steps.summarize.outputs.message }}"
-        echo '---- SUMMARY END ----'
-        echo '---- SUMMARY has {{ ? ----'
-        (printf '%s' "${{ steps.summarize.outputs.message }}" | grep -F '{{' && echo 'FOUND') || echo 'NOT FOUND'
     - name: Discord notification
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
