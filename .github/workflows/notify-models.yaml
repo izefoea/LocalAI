@@ -29,12 +29,34 @@ jobs:
             json_diff_file_output: diff.json
             raw_diff_file_output: diff.txt
             file_output_only: "true"
+    - name: Debug git-diff outputs
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "raw-diff-path: ${{ steps.git-diff-action.outputs['raw-diff-path'] }}"
+        echo "json-diff-path: ${{ steps.git-diff-action.outputs['json-diff-path'] }}"
+        ls -l
+        echo "---- HEAD diff.txt ----"
+        sed -n '1,80p' diff.txt || true
+        echo "---- TAIL diff.txt ----"
+        tail -n 80 diff.txt || true
+        echo "---- SIZE(bytes) ----"
+        wc -c diff.txt || true
     - name: Summarize
       env:
         DIFF: ${{ steps.git-diff-action.outputs.raw-diff-path }}
       id: summarize
       run: |
-            input="$(cat $DIFF)"
+            set -euo pipefail
+            input="$(cat "$DIFF")"
+        
+            # 打印 input 的长度与命中“{{”
+            echo "---- INPUT length ----"
+            printf '%s' "$input" | wc -c || true
+            echo "---- INPUT has '{{' ? ----"
+            (printf '%s' "$input" | grep -F '{{' && echo 'FOUND') || echo 'NOT FOUND'
+            echo "---- INPUT preview (first 60 lines) ----"
+            printf '%s\n' "$input" | sed -n '1,60p'
 
             # Define the LocalAI API endpoint
             API_URL="http://localhost:8080/chat/completions"
@@ -74,6 +96,14 @@ jobs:
                 echo EOF
               } >> "$GITHUB_OUTPUT"
             docker logs --tail 10 local-ai
+    - name: Debug summary before Discord
+      shell: bash
+      run: |
+        echo '---- SUMMARY START ----'
+        printf '%s\n' "${{ steps.summarize.outputs.message }}"
+        echo '---- SUMMARY END ----'
+        echo '---- SUMMARY has {{ ? ----'
+        (printf '%s' "${{ steps.summarize.outputs.message }}" | grep -F '{{' && echo 'FOUND') || echo 'NOT FOUND'
     - name: Discord notification
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
