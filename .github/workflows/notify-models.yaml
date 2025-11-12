@@ -101,7 +101,7 @@ jobs:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         DISCORD_USERNAME: "LocalAI-Bot"
         DISCORD_AVATAR: "https://avatars.githubusercontent.com/u/139863280?v=4"
-      uses: Ilshidur/action-discord@master
+      uses: izefoea/action-discord@1db13a2a6fc99e9b59b38627bbb06c5b55dab13f
       with:
         args: ${{ steps.summarize.outputs.message }}
     - name: Setup tmate session if fails
